@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble</title>
+</head>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    background-color: #f0f0f0; 
+    color: #333; 
+}
+
+body.dark-mode {
+    background-color: #232020; 
+    color: #f0f0f0; 
+}
+
+#name {
+    font-family: 'Arial', sans-serif; 
+    font-size: 36px; 
+    margin-bottom: 30px; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    margin-left: 250px;
+}
+
+#box {
+    margin-bottom: 70px;
+}
+
+#dark-mode-toggle,
+#submit-button {
+    background-color: #0ea1be; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+    margin-left: 20px;
+    margin-bottom: 20px;
+    width: 300px;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none; 
+}
+
+#dark-mode-toggle:hover,
+#submit-button:hover {
+    background-color: #45a049; 
+}
+
+#dark-mode-toggle:focus,
+#submit-button:focus {
+    outline: none; 
+}
+
+#name-input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 300px;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none; 
+}
+
+#name-input::placeholder {
+    color: #999; 
+}
+
+#name-input:focus {
+    border-color: #0ea1be;
+}
+
+
+</style>
+<body>
+    <div id="box">
+        <h1 id="name">Bubbles Game...</h1>
+        <input type="text" id="name-input" placeholder="Enter your name">
+        <button id="dark-mode-toggle">Light/Dark Mode</button>
+        <button id="submit-button" onclick="submitName()">Submit</button>
+
+    </div> 
+    <script >
+        document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            // Store the state of dark mode in local storage
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        });
+
+        function submitName() {
+            const name = document.getElementById('name-input').value;
+            if (name.trim() !== '') {
+                window.location.href = 'index1.html?name=' + encodeURIComponent(name);
+            } else {
+                alert('Please enter your name.');
+            }
+        }
+    </script>
+</body>
+</html>

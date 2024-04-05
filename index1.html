@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>secondpage</title>
+</head>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    background-color: #f0f0f0; /* Default light mode background color */
+    color: #333; /* Default text color */
+}
+
+body.dark-mode {
+    background-color: #232020; /* Dark mode background color */
+    color: #f0f0f0; /* Dark mode text color */
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative; 
+    margin-right: 500px;
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+    cursor: pointer; 
+}
+
+.arrow {
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-right: 50px solid black;
+    position: absolute;
+    transition: transform 0.5s ease; 
+    transform-origin: top right; 
+    left: calc(100% + 210px);  
+    margin-left: 500px;
+}
+
+.color-picker {
+    margin-left: 20px;
+}
+
+#generate-button, #reset-button, #home {
+    background-color: #0ea1be; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+    margin-left: 20px;
+    height: 5vh;
+}
+
+#generate-button:hover, #reset-button:hover {
+    background-color: #45a049; 
+}
+
+#generate-button:focus, #reset-button:focus {
+    outline: none; 
+}
+
+#reset-button {
+    background-color: #f44336; 
+}
+
+#reset-button:hover {
+    background-color: #d32f2f; 
+}
+
+#box {
+    margin-bottom: 70px;
+}
+
+#dark-mode-toggle{
+    background-color: #0ea1be; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+    margin-left: 20px;
+    margin-bottom: 20px;
+    width: 300px;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none; 
+
+}
+
+#home-button {
+    background-color: #f44336; 
+}
+
+#home-button:hover {
+    background-color: #d32f2f; 
+}
+
+#name {
+    font-family: 'Arial', sans-serif; 
+    font-size: 36px; 
+    margin-bottom: 30px; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    margin-left: 250px;
+}
+
+#but {
+    margin-left: 250px;
+}
+
+#name-display {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    width: 200px;
+    font-weight: bolder;
+
+}
+
+</style>
+<body>
+    <div id="box">
+        
+        <h1 id="name">Bubbles Game...</h1>
+        <input type="text" id="name-display" disabled>
+        
+        <div id="container-div"></div>
+        
+        <div id="but">
+           <button id="generate-button">Input the Circle</button>
+           <button id="reset-button">Reset</button>
+           <button id="home">Home</button>
+           <button id="dark-mode-toggle">Light/Dark Mode</button>
+        </div>
+        
+    </div>
+     
+    <script>
+        
+        const isDarkMode = JSON.parse(localStorage.getItem('darkMode'));
+
+        
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+        }
+
+        document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        });
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        document.getElementById('name-display').value = "Welcome "+name;
+        
+        let originalColors = [];
+        let originalPositions = [];
+
+        function generateCirclesAndArrows(numCircles) {
+            const containerDiv = document.getElementById('container-div');
+            containerDiv.innerHTML = ''; 
+            
+            for (let i = 1; i <= numCircles; i++) {
+                const circleDiv = document.createElement('div');
+                circleDiv.classList.add('container');
+                
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                const color = getRandomColor();
+                circle.style.backgroundColor = color;
+                originalColors.push(color); 
+                circleDiv.appendChild(circle);
+                
+                const arrow = document.createElement('div');
+                arrow.classList.add('arrow');
+                arrow.style.left = 'calc(100% + 210px)'; 
+                originalPositions.push(arrow.style.left); 
+                circleDiv.appendChild(arrow);
+                
+                const colorPicker = document.createElement('input');
+                colorPicker.type = 'color';
+                colorPicker.classList.add('color-picker');
+                circleDiv.appendChild(colorPicker);
+                
+                containerDiv.appendChild(circleDiv);
+            }
+            
+            const circles = document.querySelectorAll('.circle');
+            circles.forEach((circle, index) => {
+                circle.addEventListener('click', () => {
+                    const arrow = circle.nextElementSibling;
+                    arrow.style.left = '-300px'; 
+                    const colorPicker = circle.nextElementSibling.nextElementSibling;
+                    circle.style.backgroundColor = colorPicker.value; 
+                });
+            });
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        document.getElementById('generate-button').addEventListener('click', () => {
+            const numCircles = prompt('Enter the number of circles:');
+            if (numCircles) {
+                generateCirclesAndArrows(parseInt(numCircles));
+            }
+        });
+
+        document.getElementById('reset-button').addEventListener('click', () => {
+            const circles = document.querySelectorAll('.circle');
+            const arrows = document.querySelectorAll('.arrow');
+
+            circles.forEach((circle, index) => {
+                circle.style.backgroundColor = originalColors[index];
+            });
+            arrows.forEach((arrow, index) => {
+                arrow.style.left = originalPositions[index];
+            });
+
+        });
+
+        document.getElementById('home').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
